@@ -6,5 +6,8 @@
     "domain": "commerce",
     "capability": "inventory",
     "root": "sdkwork-inventory"
+  },
+  "contracts": {
+    "sdkDependencies": []
   }
 }

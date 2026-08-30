@@ -34,7 +34,7 @@
           "inventory"
         ],
         "summary": "List the current shop inventory stocks.",
-        "operationId": "inventory.stocks.list",
+        "operationId": "stocks.list",
         "parameters": [
           {
             "name": "page",
@@ -155,7 +155,7 @@
           "inventory"
         ],
         "summary": "Create an inventory stock adjustment for the current shop.",
-        "operationId": "inventory.stocks.adjustments.create",
+        "operationId": "stocks.adjustments.create",
         "parameters": [
           {
             "name": "stockId",
@@ -443,36 +443,44 @@
             "type": "string"
           },
           "onHandQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "availableQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "lockedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "reservedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "inboundQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "damagedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "version": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "status": {
             "type": "string"
@@ -524,8 +532,9 @@
             "type": "string"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           }
         },
         "additionalProperties": true
@@ -568,8 +577,9 @@
             "type": "string"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "direction": {
             "type": "string"
@@ -587,8 +597,9 @@
         ],
         "properties": {
           "quantityDelta": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           }
         },
         "additionalProperties": false
@@ -598,12 +609,14 @@
         "minProperties": 1,
         "properties": {
           "availableQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "x-sdkwork-int64-string": true
           },
           "status": {
             "type": "string"
