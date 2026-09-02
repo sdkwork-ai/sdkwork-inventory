@@ -7,8 +7,7 @@ use sdkwork_iam_context_service::IamAppContext;
 use sdkwork_inventory_repository_sqlx::{
     BackendInventoryListPage, BackendInventoryMovementListQuery,
     BackendInventoryReservationListQuery, BackendInventoryStockListQuery,
-    PostgresCommerceInventoryStore,
-    UpdateBackendInventoryStockCommand,
+    PostgresCommerceInventoryStore, UpdateBackendInventoryStockCommand,
 };
 use sdkwork_utils_rust::http_api::{
     PageInfo, PageMode, SdkWorkApiResponse, SdkWorkPageData, SdkWorkResourceData,
@@ -111,7 +110,6 @@ pub fn build_backend_inventory_router(store: Arc<dyn CommerceBackendInventorySto
         )
         .with_state(BackendInventoryState { store })
 }
-
 
 impl CommerceBackendInventoryStore for PostgresCommerceInventoryStore {
     fn list_stocks<'a>(

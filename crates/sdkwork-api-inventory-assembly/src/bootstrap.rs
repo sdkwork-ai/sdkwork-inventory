@@ -5,10 +5,10 @@
 //! so `/healthz`, `/livez`, `/readyz`, and `/metrics` are not duplicated per surface.
 
 use axum::Router;
-use std::sync::Arc;
-use sdkwork_web_bootstrap::{ApiAssemblyContribution, ReadinessCheck};
-use sdkwork_web_core::{DomainContextInjector, HttpRouteManifest};
 use sdkwork_inventory_service_host::InventoryServiceHost;
+use sdkwork_web_bootstrap::{ApiAssemblyContribution, ReadinessCheck, WebModule};
+use sdkwork_web_core::{DomainContextInjector, HttpRouteManifest};
+use std::sync::Arc;
 
 pub type ApiAssembly = ApiAssemblyContribution;
 
@@ -19,13 +19,21 @@ pub struct ApiAssemblyContext {
 }
 
 pub async fn assemble_api_router(context: ApiAssemblyContext) -> Result<ApiAssembly, String> {
-    let ApiAssemblyContext { host, domain_context_injectors, readiness_check } = context;
+    let ApiAssemblyContext {
+        host,
+        domain_context_injectors,
+        readiness_check,
+    } = context;
     let mut router = Router::new();
-    router = router.merge(sdkwork_routes_inventory_app_api::gateway_mount_business(host.clone()));
-    router = router.merge(sdkwork_routes_inventory_backend_api::gateway_mount_business(host.clone()));
+    router = router.merge(sdkwork_routes_inventory_app_api::gateway_mount_business(
+        host.clone(),
+    ));
+    router =
+        router.merge(sdkwork_routes_inventory_backend_api::gateway_mount_business(host.clone()));
     let mut routes = Vec::new();
     routes.extend_from_slice(sdkwork_routes_inventory_app_api::gateway_route_manifest().routes());
-    routes.extend_from_slice(sdkwork_routes_inventory_backend_api::gateway_route_manifest().routes());
+    routes
+        .extend_from_slice(sdkwork_routes_inventory_backend_api::gateway_route_manifest().routes());
     ApiAssemblyContribution::from_manifest(
         "sdkwork-inventory",
         "SDKWork inventory API",
@@ -36,10 +44,18 @@ pub async fn assemble_api_router(context: ApiAssemblyContext) -> Result<ApiAssem
     )
 }
 
-pub async fn assemble_app_api_contribution(context: ApiAssemblyContext) -> Result<ApiAssembly, String> {
-    let ApiAssemblyContext { host, domain_context_injectors, readiness_check } = context;
+pub async fn assemble_app_api_contribution(
+    context: ApiAssemblyContext,
+) -> Result<ApiAssembly, String> {
+    let ApiAssemblyContext {
+        host,
+        domain_context_injectors,
+        readiness_check,
+    } = context;
     let mut router = Router::new();
-    router = router.merge(sdkwork_routes_inventory_app_api::gateway_mount_business(host.clone()));
+    router = router.merge(sdkwork_routes_inventory_app_api::gateway_mount_business(
+        host.clone(),
+    ));
     let mut routes = Vec::new();
     routes.extend_from_slice(sdkwork_routes_inventory_app_api::gateway_route_manifest().routes());
     ApiAssemblyContribution::from_manifest(
@@ -52,12 +68,20 @@ pub async fn assemble_app_api_contribution(context: ApiAssemblyContext) -> Resul
     )
 }
 
-pub async fn assemble_backend_api_contribution(context: ApiAssemblyContext) -> Result<ApiAssembly, String> {
-    let ApiAssemblyContext { host, domain_context_injectors, readiness_check } = context;
+pub async fn assemble_backend_api_contribution(
+    context: ApiAssemblyContext,
+) -> Result<ApiAssembly, String> {
+    let ApiAssemblyContext {
+        host,
+        domain_context_injectors,
+        readiness_check,
+    } = context;
     let mut router = Router::new();
-    router = router.merge(sdkwork_routes_inventory_backend_api::gateway_mount_business(host.clone()));
+    router =
+        router.merge(sdkwork_routes_inventory_backend_api::gateway_mount_business(host.clone()));
     let mut routes = Vec::new();
-    routes.extend_from_slice(sdkwork_routes_inventory_backend_api::gateway_route_manifest().routes());
+    routes
+        .extend_from_slice(sdkwork_routes_inventory_backend_api::gateway_route_manifest().routes());
     ApiAssemblyContribution::from_manifest(
         "sdkwork-inventory",
         "SDKWork inventory Backend API",
@@ -68,3 +92,10 @@ pub async fn assemble_backend_api_contribution(context: ApiAssemblyContext) -> R
     )
 }
 
+/// Installs this application as a Web Module with caller-supplied assembly
+/// context (API_ASSEMBLY_SPEC §4.1.1).
+pub async fn web_module_with_context(context: ApiAssemblyContext) -> Result<WebModule, String> {
+    Ok(WebModule::from_contribution(
+        assemble_api_router(context).await?,
+    ))
+}

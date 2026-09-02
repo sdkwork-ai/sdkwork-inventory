@@ -70,7 +70,6 @@ pub fn build_app_merchant_inventory_router(
         .with_state(MerchantInventoryState { store })
 }
 
-
 impl CommerceMerchantInventoryStore for PostgresCommerceInventoryStore {
     fn list_merchant_stocks<'a>(
         &'a self,

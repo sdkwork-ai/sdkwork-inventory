@@ -4,8 +4,8 @@ pub mod subject;
 pub mod web_bootstrap;
 
 pub use backend_inventory_router::{
-    backend_inventory_router_with_postgres_pool,
-    build_backend_inventory_router, CommerceBackendInventoryStore,
+    backend_inventory_router_with_postgres_pool, build_backend_inventory_router,
+    CommerceBackendInventoryStore,
 };
 pub use http_route_manifest::backend_route_manifest;
 pub use web_bootstrap::wrap_router_with_web_framework_from_env;
