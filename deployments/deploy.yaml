@@ -28,6 +28,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-dev.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-dev.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -38,6 +42,10 @@ profiles:
         web: adaptive
       - domain: inventory-dev.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-dev.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-dev.skubc.com
@@ -105,6 +113,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -115,6 +127,10 @@ profiles:
         web: adaptive
       - domain: inventory.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory.skubc.com
@@ -182,6 +198,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-staging.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-staging.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -192,6 +212,10 @@ profiles:
         web: adaptive
       - domain: inventory-staging.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-staging.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-staging.skubc.com
@@ -259,6 +283,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-test.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-test.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -269,6 +297,10 @@ profiles:
         web: adaptive
       - domain: inventory-test.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-test.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-test.skubc.com
@@ -336,6 +368,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-dev.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-dev.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -346,6 +382,10 @@ profiles:
         web: adaptive
       - domain: inventory-dev.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-dev.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-dev.skubc.com
@@ -413,6 +453,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -423,6 +467,10 @@ profiles:
         web: adaptive
       - domain: inventory.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory.skubc.com
@@ -490,6 +538,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-staging.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-staging.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -500,6 +552,10 @@ profiles:
         web: adaptive
       - domain: inventory-staging.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-staging.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-staging.skubc.com
@@ -567,6 +623,10 @@ profiles:
         tls: dtupay.com
         mode: web+api
         web: adaptive
+      - domain: inventory-test.noaper.com
+        tls: noaper.com
+        mode: web+api
+        web: adaptive
       - domain: inventory-test.sdkwork.cn
         tls: sdkwork.cn
         mode: web+api
@@ -577,6 +637,10 @@ profiles:
         web: adaptive
       - domain: inventory-test.dtupay.cn
         tls: dtupay.cn
+        mode: web+api
+        web: adaptive
+      - domain: inventory-test.noaper.cn
+        tls: noaper.cn
         mode: web+api
         web: adaptive
       - domain: inventory-test.skubc.com
