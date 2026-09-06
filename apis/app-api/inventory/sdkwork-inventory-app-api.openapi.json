@@ -145,8 +145,7 @@
         "x-sdkwork-server-request-id": true,
         "x-sdkwork-source-route-crate": "sdkwork-routes-inventory-app-api",
         "x-sdkwork-source": "sdkwork-routes-inventory-app-api:/app/v3/api/shops/current/inventory/stocks",
-        "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "commerce.inventory.read"
+        "x-sdkwork-auth-mode": "dual-token"
       }
     },
     "/app/v3/api/shops/current/inventory/stocks/{stockId}/adjustments": {
@@ -255,7 +254,6 @@
         "x-sdkwork-source-route-crate": "sdkwork-routes-inventory-app-api",
         "x-sdkwork-source": "sdkwork-routes-inventory-app-api:/app/v3/api/shops/current/inventory/stocks/{stockId}/adjustments",
         "x-sdkwork-auth-mode": "dual-token",
-        "x-sdkwork-permission": "commerce.inventory.manage",
         "requestBody": {
           "required": true,
           "content": {
