@@ -7,7 +7,7 @@
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "stop": "node ../sdkwork-specs/tools/stop-sdkwork-workspace-processes.mjs --workspace .",
-    "check": "pnpm run check:app-composition && pnpm api:check && pnpm sdk:check && pnpm db:validate && pnpm api:assembly:validate",
+    "check": "pnpm run check:app-composition && pnpm api:check && pnpm sdk:check && pnpm db:validate && pnpm api:assembly:validate && pnpm check:cors-standard",
     "api:materialize": "node tools/inventory_api_sdk_generate.mjs",
     "api:check": "node tools/inventory_api_sdk_generate.mjs --check",
     "sdk:generate": "node tools/inventory_api_sdk_generate.mjs",
@@ -25,6 +25,7 @@
     "api:assembly:materialize": "node ../sdkwork-specs/tools/materialize-api-assembly.mjs --root .",
     "api:assembly:validate": "node ../sdkwork-specs/tools/validate-api-assembly.mjs --root .",
     "check:app-composition": "node ../sdkwork-specs/tools/verify-repo.mjs --root .",
+    "check:cors-standard": "node ../sdkwork-specs/tools/check-cors-standard.mjs --root .",
     "db:postgres:plan": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . plan --engine postgres",
     "db:postgres:init": "cargo run --manifest-path ../sdkwork-database/Cargo.toml -p sdkwork-database-cli -- --app-root . init --engine postgres",
     "topology:validate": "node ../sdkwork-app-topology/scripts/sdkwork-topology.mjs validate --root . --spec specs/topology.spec.json"
