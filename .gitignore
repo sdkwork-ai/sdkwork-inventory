@@ -31,7 +31,7 @@ Thumbs.db
 .env.test.local
 .env.staging.local
 .env.production.local
-.env.postgres
+config/host/postgres.env
 .env.release.local
 config/*.local.toml
 apps/*/config/*/*.local.toml
@@ -47,7 +47,7 @@ apps/*/config/*/*.local.toml
 **/.sdkwork/secrets/
 **/.sdkwork/manual-backups/
 **/.runtime/
-!.env.postgres.example
+!config/host/postgres.env.example
 coverage/
 **/.pnpm-store/
 .idea/
