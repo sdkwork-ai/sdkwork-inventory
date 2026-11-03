@@ -138,7 +138,7 @@ impl PostgresCommerceInventoryStore {
             SELECT COUNT(*) AS total
             FROM commerce_inventory_stock
             WHERE tenant_id = $1
-              AND ((organization_id = $2) OR (organization_id IS NULL AND $3 = '') OR (organization_id = '0' AND $3 = ''))
+              AND (organization_id = CASE WHEN COALESCE($3, '') = '' THEN '0' ELSE $2 END)
             "#,
         )
         .bind(&query.tenant_id)
@@ -156,7 +156,7 @@ impl PostgresCommerceInventoryStore {
                    sold_quantity, safety_stock_quantity, version, status, created_at, updated_at
             FROM commerce_inventory_stock
             WHERE tenant_id = $1
-              AND ((organization_id = $2) OR (organization_id IS NULL AND $3 = '') OR (organization_id = '0' AND $3 = ''))
+              AND (organization_id = CASE WHEN COALESCE($3, '') = '' THEN '0' ELSE $2 END)
             ORDER BY updated_at DESC, id DESC
             LIMIT $4 OFFSET $5
             "#,
@@ -366,7 +366,7 @@ async fn list_simple_page(
     let offset = (page - 1) * page_size;
     let organization_id = request.organization_id.unwrap_or("");
 
-    let count_sql = format!("SELECT COUNT(*) AS total FROM {table} WHERE tenant_id = $1 AND ((organization_id = $2) OR (organization_id IS NULL AND $3 = '') OR (organization_id = '0' AND $3 = ''))");
+    let count_sql = format!("SELECT COUNT(*) AS total FROM {table} WHERE tenant_id = $1 AND (organization_id = CASE WHEN COALESCE($3, '') = '' THEN '0' ELSE $2 END)");
     let total_row = sqlx::query(sqlx::AssertSqlSafe(count_sql.as_str()))
         .bind(request.tenant_id)
         .bind(organization_id)
@@ -377,7 +377,7 @@ async fn list_simple_page(
     let total: i64 = total_row.try_get("total").unwrap_or(0);
 
     let list_sql = format!(
-        "SELECT {select_columns} FROM {table} WHERE tenant_id = $1 AND ((organization_id = $2) OR (organization_id IS NULL AND $3 = '') OR (organization_id = '0' AND $3 = '')) ORDER BY {order_by} LIMIT $4 OFFSET $5"
+        "SELECT {select_columns} FROM {table} WHERE tenant_id = $1 AND (organization_id = CASE WHEN COALESCE($3, '') = '' THEN '0' ELSE $2 END) ORDER BY {order_by} LIMIT $4 OFFSET $5"
     );
     let rows = sqlx::query(sqlx::AssertSqlSafe(list_sql.as_str()))
         .bind(request.tenant_id)
