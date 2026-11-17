@@ -14,6 +14,12 @@ const HTTP_ROUTES: &[HttpRoute] = &[
         "inventory.stocks.update",
     ),
     HttpRoute::dual_token(
+        HttpMethod::Post,
+        "/backend/v3/api/inventory/stocks/{stockId}/adjustments",
+        "commerce.inventory.manage",
+        "inventory.stocks.adjustments.create",
+    ),
+    HttpRoute::dual_token(
         HttpMethod::Get,
         "/backend/v3/api/inventory/reservations",
         "commerce.inventory.read",

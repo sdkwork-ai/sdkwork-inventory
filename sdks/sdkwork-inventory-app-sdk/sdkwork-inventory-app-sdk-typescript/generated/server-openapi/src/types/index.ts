@@ -7,6 +7,7 @@ export type { InventoryReservation } from './inventory-reservation';
 export type { InventoryMovement } from './inventory-movement';
 export type { CreateInventoryAdjustmentRequest } from './create-inventory-adjustment-request';
 export type { UpdateInventoryStockRequest } from './update-inventory-stock-request';
+export type { AdjustInventoryStockRequest } from './adjust-inventory-stock-request';
 export type { InventoryStockPageResponse } from './inventory-stock-page-response';
 export type { InventoryReservationPageResponse } from './inventory-reservation-page-response';
 export type { InventoryMovementPageResponse } from './inventory-movement-page-response';

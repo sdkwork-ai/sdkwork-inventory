@@ -1,11 +1,12 @@
 use axum::extract::{Extension, Path, Query, State};
+use axum::http::{HeaderMap, StatusCode};
 use axum::response::{IntoResponse, Response};
-use axum::routing::{get, patch};
+use axum::routing::{get, patch, post};
 use axum::{Json, Router};
 use sdkwork_contract_service::CommerceServiceError;
 use sdkwork_iam_context_service::IamAppContext;
 use sdkwork_inventory_repository_sqlx::{
-    BackendInventoryListPage, BackendInventoryMovementListQuery,
+    AdjustBackendInventoryStockCommand, BackendInventoryListPage, BackendInventoryMovementListQuery,
     BackendInventoryReservationListQuery, BackendInventoryStockListQuery,
     PostgresCommerceInventoryStore, UpdateBackendInventoryStockCommand,
 };
@@ -34,6 +35,11 @@ pub trait CommerceBackendInventoryStore: Send + Sync {
     fn update_stock<'a>(
         &'a self,
         command: UpdateBackendInventoryStockCommand,
+    ) -> CommerceBackendInventoryFuture<'a, serde_json::Value>;
+
+    fn adjust_stock<'a>(
+        &'a self,
+        command: AdjustBackendInventoryStockCommand,
     ) -> CommerceBackendInventoryFuture<'a, serde_json::Value>;
 
     fn list_reservations<'a>(
@@ -81,9 +87,21 @@ struct MovementListParams {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct UpdateStockRequest {
+    #[serde(default, with = "sdkwork_utils_rust::serde_int64::option")]
     available_quantity: Option<i64>,
+    #[serde(default, with = "sdkwork_utils_rust::serde_int64::option")]
     safety_stock_quantity: Option<i64>,
     status: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct AdjustStockRequest {
+    #[serde(with = "sdkwork_utils_rust::serde_int64")]
+    quantity_delta: i64,
+    movement_type: Option<String>,
+    reason: Option<String>,
+    request_no: Option<String>,
 }
 
 pub fn backend_inventory_router_with_postgres_pool(pool: PgPool) -> Router {
@@ -99,6 +117,10 @@ pub fn build_backend_inventory_router(store: Arc<dyn CommerceBackendInventorySto
         .route(
             "/backend/v3/api/inventory/stocks/{stockId}",
             patch(update_inventory_stock),
+        )
+        .route(
+            "/backend/v3/api/inventory/stocks/{stockId}/adjustments",
+            post(adjust_inventory_stock),
         )
         .route(
             "/backend/v3/api/inventory/reservations",
@@ -124,6 +146,13 @@ impl CommerceBackendInventoryStore for PostgresCommerceInventoryStore {
         command: UpdateBackendInventoryStockCommand,
     ) -> CommerceBackendInventoryFuture<'a, serde_json::Value> {
         Box::pin(async move { self.update_backend_stock(command).await })
+    }
+
+    fn adjust_stock<'a>(
+        &'a self,
+        command: AdjustBackendInventoryStockCommand,
+    ) -> CommerceBackendInventoryFuture<'a, serde_json::Value> {
+        Box::pin(async move { self.adjust_backend_stock(command).await })
     }
 
     fn list_reservations<'a>(
@@ -188,6 +217,52 @@ async fn update_inventory_stock(
     match state.store.update_stock(command).await {
         Ok(item) => success_resource_response(item),
         Err(error) => inventory_error_response("inventory stock update failed", error),
+    }
+}
+
+async fn adjust_inventory_stock(
+    State(state): State<BackendInventoryState>,
+    runtime_context: Option<Extension<IamAppContext>>,
+    headers: HeaderMap,
+    Path(stock_id): Path<String>,
+    Json(body): Json<AdjustStockRequest>,
+) -> Response {
+    let subject = match app_runtime_subject_from_extension(runtime_context) {
+        Ok(subject) => subject,
+        Err(message) => return unauthorized_response(message),
+    };
+    // The route is declared idempotent, so the client operation key is required:
+    // a replayed adjustment must not move the quantity twice.
+    let idempotency_key = match headers
+        .get("idempotency-key")
+        .and_then(|value| value.to_str().ok())
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+    {
+        Some(value) => value.to_owned(),
+        None => {
+            return inventory_error_response(
+                "inventory stock adjustment rejected",
+                CommerceServiceError::validation("Idempotency-Key header is required"),
+            );
+        }
+    };
+    let command = AdjustBackendInventoryStockCommand {
+        tenant_id: subject.tenant_id,
+        organization_id: subject.organization_id,
+        stock_id,
+        quantity_delta: body.quantity_delta,
+        movement_type: body
+            .movement_type
+            .unwrap_or_else(|| "stocktake".to_string()),
+        reason: body.reason,
+        request_no: body.request_no,
+        idempotency_key,
+    };
+
+    match state.store.adjust_stock(command).await {
+        Ok(item) => created_resource_response(item),
+        Err(error) => inventory_error_response("inventory stock adjustment failed", error),
     }
 }
 
@@ -292,6 +367,12 @@ fn success_resource_response<T: Serialize>(item: T) -> Response {
         trace_id(),
     ))
     .into_response()
+}
+
+fn created_resource_response<T: Serialize>(item: T) -> Response {
+    let mut response = success_resource_response(item);
+    *response.status_mut() = StatusCode::CREATED;
+    response
 }
 
 fn api_problem_response(kind: WebFrameworkErrorKind, message: impl Into<String>) -> Response {

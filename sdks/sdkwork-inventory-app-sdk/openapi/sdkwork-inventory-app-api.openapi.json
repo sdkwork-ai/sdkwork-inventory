@@ -34,7 +34,7 @@
           "inventory"
         ],
         "summary": "List the current shop inventory stocks.",
-        "operationId": "stocks.list",
+        "operationId": "inventory.stocks.list",
         "parameters": [
           {
             "name": "page",
@@ -155,7 +155,7 @@
           "inventory"
         ],
         "summary": "Create an inventory stock adjustment for the current shop.",
-        "operationId": "stocks.adjustments.create",
+        "operationId": "inventory.stocks.adjustments.create",
         "parameters": [
           {
             "name": "stockId",
@@ -445,41 +445,49 @@
           "onHandQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "availableQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "lockedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "reservedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "inboundQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "damagedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "version": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "status": {
@@ -534,6 +542,7 @@
           "quantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           }
         },
@@ -579,6 +588,7 @@
           "quantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "direction": {
@@ -599,6 +609,7 @@
           "quantityDelta": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           }
         },
@@ -611,14 +622,47 @@
           "availableQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdjustInventoryStockRequest": {
+        "type": "object",
+        "required": [
+          "quantityDelta"
+        ],
+        "properties": {
+          "quantityDelta": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true,
+            "description": "Signed quantity delta; positive records an inbound movement, negative an outbound one."
+          },
+          "movementType": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound",
+              "stocktake"
+            ],
+            "default": "stocktake"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requestNo": {
             "type": "string"
           }
         },

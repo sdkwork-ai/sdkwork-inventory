@@ -443,36 +443,52 @@
             "type": "string"
           },
           "onHandQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "availableQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "lockedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "reservedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "inboundQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "damagedQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "version": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "status": {
             "type": "string"
@@ -524,8 +540,10 @@
             "type": "string"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           }
         },
         "additionalProperties": true
@@ -568,8 +586,10 @@
             "type": "string"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "direction": {
             "type": "string"
@@ -587,8 +607,10 @@
         ],
         "properties": {
           "quantityDelta": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           }
         },
         "additionalProperties": false
@@ -598,14 +620,49 @@
         "minProperties": 1,
         "properties": {
           "availableQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true
           },
           "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdjustInventoryStockRequest": {
+        "type": "object",
+        "required": [
+          "quantityDelta"
+        ],
+        "properties": {
+          "quantityDelta": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true,
+            "description": "Signed quantity delta; positive records an inbound movement, negative an outbound one."
+          },
+          "movementType": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound",
+              "stocktake"
+            ],
+            "default": "stocktake"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requestNo": {
             "type": "string"
           }
         },

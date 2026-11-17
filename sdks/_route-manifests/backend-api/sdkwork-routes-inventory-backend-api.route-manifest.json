@@ -59,6 +59,28 @@
       "apiSurface": "backend-api"
     },
     {
+      "method": "POST",
+      "path": "/backend/v3/api/inventory/stocks/{stockId}/adjustments",
+      "operationId": "inventory.stocks.adjustments.create",
+      "tags": [
+        "inventory"
+      ],
+      "auth": {
+        "mode": "dual-token",
+        "required": true,
+        "permission": "commerce.inventory.manage"
+      },
+      "ownership": {
+        "owner": "sdkwork-inventory",
+        "apiAuthority": "sdkwork-inventory-backend-api"
+      },
+      "source": {
+        "file": "sdkwork-routes-inventory-backend-api:/backend/v3/api/inventory/stocks/{stockId}/adjustments"
+      },
+      "requestContext": "WebRequestContext",
+      "apiSurface": "backend-api"
+    },
+    {
       "method": "GET",
       "path": "/backend/v3/api/inventory/reservations",
       "operationId": "inventory.reservations.list",

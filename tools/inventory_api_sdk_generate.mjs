@@ -66,6 +66,22 @@ const targets = [
         summary: 'Update an inventory stock record.',
       },
       {
+        method: 'post', path: '/backend/v3/api/inventory/stocks/{stockId}/adjustments',
+        operationId: 'inventory.stocks.adjustments.create', permission: 'commerce.inventory.manage',
+        idempotent: true,
+        parameters: [
+          { name: 'stockId', in: 'path', required: true, schema: { type: 'string', minLength: 1 } },
+          {
+            name: 'Idempotency-Key',
+            in: 'header',
+            required: true,
+            schema: { type: 'string', minLength: 1, maxLength: 128 },
+          },
+        ],
+        body: 'AdjustInventoryStockRequest', response: 'InventoryStockResourceResponse', status: '201',
+        summary: 'Adjust an inventory stock record and append a movement.',
+      },
+      {
         method: 'get', path: '/backend/v3/api/inventory/reservations',
         operationId: 'inventory.reservations.list', permission: 'commerce.inventory.read',
         parameters: [
@@ -123,6 +139,12 @@ function resourceResponse(itemRef) {
 }
 
 function schemas() {
+  const int64 = () => ({
+    type: 'string',
+    format: 'int64',
+    pattern: '^-?[0-9]+$',
+    'x-sdkwork-int64-string': true,
+  });
   const recordIdentity = {
     id: { type: 'string' }, tenantId: { type: 'string' },
     organizationId: { type: ['string', 'null'] }, createdAt: { type: 'string' }, updatedAt: { type: 'string' },
@@ -158,37 +180,49 @@ function schemas() {
       type: 'object', required: ['id', 'tenantId', 'skuId', 'availableQuantity', 'reservedQuantity', 'status'],
       properties: {
         ...recordIdentity, skuId: { type: 'string' }, warehouseId: { type: ['string', 'null'] },
-        fulfillmentNodeId: { type: 'string' }, onHandQuantity: { type: 'integer', format: 'int64' },
-        availableQuantity: { type: 'integer', format: 'int64' }, lockedQuantity: { type: 'integer', format: 'int64' },
-        reservedQuantity: { type: 'integer', format: 'int64' }, inboundQuantity: { type: 'integer', format: 'int64' },
-        damagedQuantity: { type: 'integer', format: 'int64' }, safetyStockQuantity: { type: 'integer', format: 'int64' },
-        version: { type: 'integer', format: 'int64' }, status: { type: 'string' },
+        fulfillmentNodeId: { type: 'string' }, onHandQuantity: int64(),
+        availableQuantity: int64(), lockedQuantity: int64(),
+        reservedQuantity: int64(), inboundQuantity: int64(),
+        damagedQuantity: int64(), safetyStockQuantity: int64(),
+        version: int64(), status: { type: 'string' },
       }, additionalProperties: true,
     },
     InventoryReservation: {
       type: 'object', required: ['id', 'tenantId', 'skuId', 'status', 'quantity'],
       properties: {
         ...recordIdentity, reservationNo: { type: 'string' }, orderId: { type: ['string', 'null'] },
-        skuId: { type: 'string' }, status: { type: 'string' }, quantity: { type: 'integer', format: 'int64' },
+        skuId: { type: 'string' }, status: { type: 'string' }, quantity: int64(),
       }, additionalProperties: true,
     },
     InventoryMovement: {
       type: 'object', required: ['id', 'tenantId', 'skuId', 'movementType', 'quantity'],
       properties: {
         ...recordIdentity, movementNo: { type: 'string' }, skuId: { type: 'string' },
-        movementType: { type: 'string' }, quantity: { type: 'integer', format: 'int64' },
+        movementType: { type: 'string' }, quantity: int64(),
         direction: { type: 'string' }, occurredAt: { type: 'string' },
       }, additionalProperties: true,
     },
     CreateInventoryAdjustmentRequest: {
       type: 'object', required: ['quantityDelta'],
-      properties: { quantityDelta: { type: 'integer', format: 'int64' } }, additionalProperties: false,
+      properties: { quantityDelta: int64() }, additionalProperties: false,
     },
     UpdateInventoryStockRequest: {
       type: 'object', minProperties: 1,
       properties: {
-        availableQuantity: { type: 'integer', format: 'int64' },
-        safetyStockQuantity: { type: 'integer', format: 'int64' }, status: { type: 'string' },
+        availableQuantity: int64(),
+        safetyStockQuantity: int64(), status: { type: 'string' },
+      }, additionalProperties: false,
+    },
+    AdjustInventoryStockRequest: {
+      type: 'object', required: ['quantityDelta'],
+      properties: {
+        quantityDelta: {
+          type: 'string', format: 'int64', pattern: '^-?[0-9]+$', 'x-sdkwork-int64-string': true,
+          description: 'Signed quantity delta; positive records an inbound movement, negative an outbound one.',
+        },
+        movementType: { type: 'string', enum: ['inbound', 'outbound', 'stocktake'], default: 'stocktake' },
+        reason: { type: 'string' },
+        requestNo: { type: 'string' },
       }, additionalProperties: false,
     },
     InventoryStockPageResponse: pageResponse('#/components/schemas/InventoryStock'),
@@ -237,6 +271,9 @@ function operationObject(target, entry) {
       required: true,
       content: { 'application/json': { schema: { $ref: `#/components/schemas/${entry.body}` } } },
     };
+  }
+  if (entry.idempotent) {
+    result['x-sdkwork-idempotent'] = true;
   }
   return result;
 }

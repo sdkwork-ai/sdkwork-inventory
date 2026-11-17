@@ -34,7 +34,7 @@
           "inventory"
         ],
         "summary": "List inventory stocks for operators.",
-        "operationId": "stocks.list",
+        "operationId": "inventory.stocks.list",
         "parameters": [
           {
             "name": "sku_id",
@@ -179,7 +179,7 @@
           "inventory"
         ],
         "summary": "Update an inventory stock record.",
-        "operationId": "stocks.update",
+        "operationId": "inventory.stocks.update",
         "parameters": [
           {
             "name": "stockId",
@@ -292,13 +292,143 @@
         }
       }
     },
+    "/backend/v3/api/inventory/stocks/{stockId}/adjustments": {
+      "post": {
+        "tags": [
+          "inventory"
+        ],
+        "summary": "Adjust an inventory stock record and append a movement.",
+        "operationId": "inventory.stocks.adjustments.create",
+        "parameters": [
+          {
+            "name": "stockId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryStockResourceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Permission denied",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AuthToken": [],
+            "AccessToken": []
+          }
+        ],
+        "x-sdkwork-owner": "sdkwork-inventory",
+        "x-sdkwork-api-authority": "sdkwork-inventory-backend-api",
+        "x-sdkwork-domain": "commerce",
+        "x-sdkwork-resource": "inventory.stocks.adjustments",
+        "x-sdkwork-request-context": "WebRequestContext",
+        "x-sdkwork-api-surface": "backend-api",
+        "x-sdkwork-server-request-id": true,
+        "x-sdkwork-source-route-crate": "sdkwork-routes-inventory-backend-api",
+        "x-sdkwork-source": "sdkwork-routes-inventory-backend-api:/backend/v3/api/inventory/stocks/{stockId}/adjustments",
+        "x-sdkwork-auth-mode": "dual-token",
+        "x-sdkwork-permission": "commerce.inventory.manage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustInventoryStockRequest"
+              }
+            }
+          }
+        },
+        "x-sdkwork-idempotent": true
+      }
+    },
     "/backend/v3/api/inventory/reservations": {
       "get": {
         "tags": [
           "inventory"
         ],
         "summary": "List inventory reservations.",
-        "operationId": "reservations.list",
+        "operationId": "inventory.reservations.list",
         "parameters": [
           {
             "name": "order_id",
@@ -443,7 +573,7 @@
           "inventory"
         ],
         "summary": "List inventory movements.",
-        "operationId": "movements.list",
+        "operationId": "inventory.movements.list",
         "parameters": [
           {
             "name": "sku_id",
@@ -751,41 +881,49 @@
           "onHandQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "availableQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "lockedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "reservedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "inboundQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "damagedQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "version": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "status": {
@@ -840,6 +978,7 @@
           "quantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           }
         },
@@ -885,6 +1024,7 @@
           "quantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "direction": {
@@ -905,6 +1045,7 @@
           "quantityDelta": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           }
         },
@@ -917,14 +1058,47 @@
           "availableQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "safetyStockQuantity": {
             "type": "string",
             "format": "int64",
+            "pattern": "^-?[0-9]+$",
             "x-sdkwork-int64-string": true
           },
           "status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdjustInventoryStockRequest": {
+        "type": "object",
+        "required": [
+          "quantityDelta"
+        ],
+        "properties": {
+          "quantityDelta": {
+            "type": "string",
+            "format": "int64",
+            "pattern": "^-?[0-9]+$",
+            "x-sdkwork-int64-string": true,
+            "description": "Signed quantity delta; positive records an inbound movement, negative an outbound one."
+          },
+          "movementType": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "outbound",
+              "stocktake"
+            ],
+            "default": "stocktake"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requestNo": {
             "type": "string"
           }
         },
