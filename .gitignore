@@ -65,6 +65,16 @@ Thumbs.db
 
 # Build artifacts
 
+# Compiled output emitted beside generated SDK TypeScript sources (never committed)
+**/generated/server-openapi/src/**/*.js
+**/generated/server-openapi/src/**/*.js.map
+**/generated/server-openapi/src/**/*.d.ts
+**/generated/server-openapi/src/**/*.d.ts.map
+**/sdks/**/src/**/*.js
+**/sdks/**/src/**/*.js.map
+**/sdks/**/src/**/*.d.ts
+**/sdks/**/src/**/*.d.ts.map
+
 # ---- auto-audited: local artifacts that must never be committed ----
 *.key
 *.pem
