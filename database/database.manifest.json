@@ -36,7 +36,7 @@
     "driftCheckIntervalSec": 60,
     "defaultSeedLocale": "zh-CN",
     "defaultSeedProfile": "standard",
-    "seedOnBoot": false,
+    "seedOnBoot": true,
     "autoMigrate": false
   },
   "baselineStrategy": "baseline-plus-migrations",

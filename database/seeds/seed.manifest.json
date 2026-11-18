@@ -6,7 +6,8 @@
     "standard": {
       "locales": {},
       "common": [
-        "001_bootstrap.sql"
+        "001_bootstrap.sql",
+        "002_demo_stocks.sql"
       ]
     }
   },
