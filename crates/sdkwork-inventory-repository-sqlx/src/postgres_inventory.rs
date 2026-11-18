@@ -218,6 +218,13 @@ impl PostgresCommerceInventoryStore {
                 ));
             }
         }
+        if let Some(safety_stock_quantity) = command.safety_stock_quantity {
+            if safety_stock_quantity < 0 {
+                return Err(CommerceServiceError::validation(
+                    "safety_stock_quantity must be greater than or equal to 0",
+                ));
+            }
+        }
         let organization_id = command.organization_id.clone().unwrap_or_default();
 
         sqlx::query(
@@ -900,6 +907,22 @@ mod adjustment_validation_tests {
             .adjust_backend_stock(command(0, "inbound"))
             .await
             .expect_err("a zero delta must be rejected");
+        assert_eq!(error.code(), "validation");
+    }
+
+    #[tokio::test]
+    async fn rejects_negative_safety_stock_before_touching_the_database() {
+        let error = store()
+            .update_backend_stock(UpdateBackendInventoryStockCommand {
+                tenant_id: "t-1".to_string(),
+                organization_id: None,
+                stock_id: "stock-1".to_string(),
+                available_quantity: None,
+                safety_stock_quantity: Some(-1),
+                status: None,
+            })
+            .await
+            .expect_err("a negative safety stock must be rejected");
         assert_eq!(error.code(), "validation");
     }
 
